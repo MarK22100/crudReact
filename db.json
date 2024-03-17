@@ -1,0 +1,16 @@
+{
+  "productos": [
+    {
+      "id": "d890",
+      "title": "Arroz",
+      "description": "Arroz blanco 1Kilo",
+      "category": "Alimentos"
+    },
+    {
+      "id": "5ecd",
+      "title": "Fideo",
+      "description": "Fideo Entrefino 1Kilo",
+      "category": "Alimentos"
+    }
+  ]
+}

@@ -1,32 +1,27 @@
-import clsx from 'clsx';
+import { clsx } from "clsx";
+import { useFormik } from "formik";
+import { Button, Form, Modal } from "react-bootstrap";
+//import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import * as Yup from "yup";
-import { useFormik} from "formik";
-import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
-const CreateProduct = () => {
-    /* 
-    const [category, setCategory] = useState('')
-    const [shouldValidate, setShouldValidate] = useState(false);
-    */
-   //
-    const navigate = useNavigate()
-    //VARIABLES DE ENTORNO
+const CreateProdModal = ({show, handleClose, getProducts}) => {
+    //const navigate = useNavigate();
     const API = import.meta.env.VITE_API;
-  //INICIO DE CONFIGURACION DE FORMIK
+
     const ProductSchema = Yup.object().shape({
-      title: Yup.string()
-        .min(4, "Minimo de 4 caracteres")
-        .max(20, "Maximo de 20 caracteres")
-        .required("El titulo es requerido"),
-      description: Yup.string()
-        .min(10, "Minimo de 10 caracteres")
-        .max(200, "Maximo de 200 caracteres")
-        .required("Descripcion requerida"),
-      category: Yup.string().required("La categoria es requerida")
-    });
-    const initialValues = {
+        title: Yup.string()
+          .min(4, "Minimo de 4 caracteres")
+          .max(20, "Maximo de 20 caracteres")
+          .required("El titulo es requerido"),
+        description: Yup.string()
+          .min(10, "Minimo de 10 caracteres")
+          .max(200, "Maximo de 200 caracteres")
+          .required("Descripcion requerida"),
+        category: Yup.string().required("La categoria es requerida")
+      });
+
+      const initialValues = {
         title : "",
         description:"",
         category:""
@@ -65,6 +60,7 @@ const CreateProduct = () => {
                   text: "se creo un nuevo producto",
                   icon: "success"
                 });
+                CloseModal()
               }
             } catch (error) {
               console.log("ERROR-->", error);
@@ -73,14 +69,25 @@ const CreateProduct = () => {
         });
       },
     })
-    return (
+    const CloseModal=()=>{
+        getProducts();
+        Formik.resetForm();   
+        handleClose();
+      };
       
-      <div className="container py-3 my-3">
-        <div className="text-center">
-          <h2>Crear Productos</h2>
-        </div>
-        <Button className='btn btn-secondary' onClick={()=>{navigate("/Administration")}}>Atras</Button>
-        <Form onSubmit={Formik.handleSubmit}>
+    return (
+        <div>
+    <Modal show={show} onHide={CloseModal} backdrop='static'
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          CREAR PRODUCTO
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+      <Form onSubmit={Formik.handleSubmit}>
           <Form.Group className="mb-3" controlId="title">
             <Form.Label>Titulo</Form.Label>
             <Form.Control
@@ -160,14 +167,30 @@ const CreateProduct = () => {
               <option value="Alimentos">Alimentos</option>
               <option value="Limpieza">Limpieza</option>
             </Form.Select>
+            {Formik.touched.category && Formik.errors.category && (
+              <div className="mt-2 text-danger fw-bolder">
+                <span role="alert">{Formik.errors.category}</span>
+              </div>
+            )}
           </Form.Group>
 
           <Button variant="primary" type="submit">
             Guardar
           </Button>
+          <Button
+              variant="danger"
+              onClick={() => {
+               CloseModal();
+              }}
+              className="mx-2"
+            >
+              Cerrar
+            </Button>
         </Form>
-      </div>
+      </Modal.Body>
+    </Modal>
+        </div>
     );
 };
 
-export default CreateProduct;
+export default CreateProdModal;
