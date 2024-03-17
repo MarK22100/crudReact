@@ -2,11 +2,13 @@
 import { Button, Nav, Navbar } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import Login from '../sections/Login';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import UserContext from '../Context/UserContext';
 
 const NavBar = () => {
 
-  
+  const {currentUser, setCurrentUser, RemoveAuth} = useContext(UserContext)
+
   const [isOpen, setIsOpen] = useState(false);
 
   const handleShow = () => {
@@ -16,6 +18,10 @@ const NavBar = () => {
   const handleClose = () => {
     setIsOpen(false);
   };
+  const LogOut= () =>{
+    RemoveAuth();
+    setCurrentUser(undefined);
+  }
 
   return (
     <>
@@ -27,11 +33,12 @@ const NavBar = () => {
           <Nav className="me-auto">
             <NavLink className="nav-link" to="/">Home</NavLink>
             <NavLink className="nav-link" to="/CreateProduct">Acerca de nosotros</NavLink>
-            <NavLink className="nav-link" to="/Administration">Administración</NavLink>
+            {(currentUser!==undefined&&currentUser.role==="Admin")&&<NavLink className="nav-link" to="/Administration">Administración</NavLink>}
+            
           </Nav>
           <Nav className='gap-1'>
             <Button variant="primary" onClick={handleShow}>Login</Button>
-            <Button variant="secondary" >LogOut</Button>
+            <Button variant="secondary" onClick={LogOut} >LogOut</Button>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

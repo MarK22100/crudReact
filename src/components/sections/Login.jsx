@@ -3,9 +3,13 @@ import clsx from 'clsx';
 import * as Yup from "yup";
 import { useFormik } from 'formik';
 import axios from 'axios';
+import UserContext from '../Context/UserContext';
+import { useContext } from 'react';
 
 
 const Login = ({isOpen, handleClose}) => {
+
+const {setCurrentUser, SaveAuth} = useContext(UserContext);
 
 const API = import.meta.env.VITE_API_BCK;
 
@@ -23,19 +27,19 @@ const Formik=useFormik({
   validateOnBlur:true,
   validationOnChange:true,
   onSubmit: async (values)=> {
-    console.log("VALUES--->", values);
     try {
       const response = await axios.post(`${API}/users/login`, values);
-      console.log("RESPUESTA LOGIN ", response.data);
+      //console.log("RESPUESTA LOGIN ", response.data);
       if (response.status===200) {
+        SaveAuth(response.data);
+        setCurrentUser(response.data)
         Formik.resetForm();
         handleClose() 
       }
-      else{
-        alert("OCURRIO UN ERROR")
-      }
+
     } catch (error) {
-      console.log(error);
+      console.error(error.response.data);
+      console.error(error)
     }
   }
 

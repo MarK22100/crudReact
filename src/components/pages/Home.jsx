@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import {useEffect } from "react";
 import { useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import CardProduct from "../sections/CardProduct"
@@ -6,6 +6,8 @@ import axios from "axios";
 
 
 const Home = () => {
+    
+
     const [products, setProducts] = useState([]);
 
     const API = import.meta.env.VITE_API;
@@ -13,8 +15,6 @@ const Home = () => {
     const getProducts = async () =>{
         try{
             const response =await axios.get(`${API}/productos`)
-            console.log("RESPONSE AXIOS", response);
-
             setProducts(response.data);
         }
         catch (error){
@@ -29,6 +29,7 @@ const Home = () => {
             setProducts([]);
         };
     }, []);
+
 
     return (
         <>
